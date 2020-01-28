@@ -1,6 +1,8 @@
 import uuid
 import json
 from .registry_proxy import RegistryProxy
+from .voucher import Voucher
+from .voucher import VoucherEncoder
 from .crypto import Crypto
 import base64
 
@@ -58,14 +60,20 @@ class Connector:
                 or len(vouchers) == 0:
             raise ValueError("Voucher list is not valid or empty")
 
+        if not isinstance(vouchers[0], Voucher) \
+                and not isinstance(vouchers[0], dict):
+            raise ValueError("Vouchers has to be instances of Voucher or dictionaries")
+
         # generate a valid nonce if there is no one
         effective_nonce = self.__generate_nonce(nonce)
 
+        payload = json.dumps({'SourceId': self.ID,
+                              'Nonce': effective_nonce,
+                              'Password': password,
+                              'Vouchers': vouchers}, cls=VoucherEncoder if isinstance(vouchers[0], Voucher) else None)
+
         # encrypt inner payload
-        vouchers_create_payload = Crypto.encrypt(json.dumps({'SourceId': self.ID,
-                                                             'Nonce': effective_nonce,
-                                                             'Password': password,
-                                                             'Vouchers': vouchers}),
+        vouchers_create_payload = Crypto.encrypt(payload,
                                                  public_key=self.__registry_proxy.PublicKey)
 
         # make registry request
