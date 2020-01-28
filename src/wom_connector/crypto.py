@@ -3,9 +3,12 @@ import math
 from cryptography.hazmat.primitives.asymmetric.rsa import RSAPublicKey
 from cryptography.hazmat.primitives.asymmetric.rsa import RSAPrivateKey
 from cryptography.hazmat.primitives.asymmetric import padding
+from .wom_logger import WOMLogger
 
 
 class Crypto(object):
+
+    __logger = WOMLogger("Crypto")
 
     @classmethod
     def encrypt(cls, payload, public_key: RSAPublicKey):
@@ -30,7 +33,8 @@ class Crypto(object):
             block = payload_bytes[offset:offset+block_length]
             encrypted = encrypted + receiver_public_key.encrypt(block, padding.PKCS1v15())
 
-        print("ENCRYPT Input bytes: {0}, encrypted bytes {1}".format(len(payload_bytes), len(encrypted)))
+        cls.__logger.debug("ENCRYPT Input bytes: {0}, encrypted bytes {1}".format(
+            len(payload_bytes), len(encrypted)))
 
         return encrypted
 
@@ -54,7 +58,8 @@ class Crypto(object):
             block = payload_bytes[offset:offset + block_length]
             decrypted = decrypted + private_key.decrypt(block, padding.PKCS1v15())
 
-        print("DECRYPT Input bytes: {0}, encrypted bytes {1}".format(len(payload_bytes), len(decrypted)))
+        cls.__logger.debug("DECRYPT Input bytes: {0}, encrypted bytes {1}".format(
+            len(payload_bytes), len(decrypted)))
 
         return decrypted
 
