@@ -10,7 +10,12 @@ if __name__ == "__main__":
                           registry_pubk=pubk.read(),
                           instrument_privk=privk.read())
 
-    connector.request_vouchers(vouchers=list([
+    otc, password = connector.request_vouchers(vouchers=[
+        {'Aim': 'H',
+         'Latitude': 46.0,
+         'Longitude': 12.0,
+         'Timestamp': datetime.datetime.utcnow().isoformat(),
+         "Count": 100},
         {'Aim': 'H',
          'Latitude': 46.0,
          'Longitude': 12.0,
@@ -55,30 +60,7 @@ if __name__ == "__main__":
          'Latitude': 46.0,
          'Longitude': 12.0,
          'Timestamp': datetime.datetime.utcnow().isoformat(),
-         "Count": 1},
-        {'Aim': 'H',
-         'Latitude': 46.0,
-         'Longitude': 12.0,
-         'Timestamp': datetime.datetime.utcnow().isoformat(),
-         "Count": 1},
-        {'Aim': 'H',
-         'Latitude': 46.0,
-         'Longitude': 12.0,
-         'Timestamp': datetime.datetime.utcnow().isoformat(),
-         "Count": 1},
-        {'Aim': 'H',
-         'Latitude': 46.0,
-         'Longitude': 12.0,
-         'Timestamp': datetime.datetime.utcnow().isoformat(),
-         "Count": 1},
-        {'Aim': 'H',
-         'Latitude': 46.0,
-         'Longitude': 12.0,
-         'Timestamp': datetime.datetime.utcnow().isoformat(),
-         "Count": 1},
-        {'Aim': 'H',
-         'Latitude': 46.0,
-         'Longitude': 12.0,
-         'Timestamp': datetime.datetime.utcnow().isoformat(),
-         "Count": 1},
-    ]))
+         "Count": 1}
+    ])
+
+    print("Otc: {otc} Password:{password}".format(otc=otc, password=password))

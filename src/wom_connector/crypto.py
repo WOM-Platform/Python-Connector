@@ -1,37 +1,61 @@
 import base64
-
+import math
 from cryptography.hazmat.primitives.asymmetric.rsa import RSAPublicKey
+from cryptography.hazmat.primitives.asymmetric.rsa import RSAPrivateKey
 from cryptography.hazmat.primitives.asymmetric import padding
 
 
 class Crypto(object):
 
     @classmethod
-    def Encrypt(cls, payload, receiver_public_key):
+    def encrypt(cls, payload, public_key: RSAPublicKey):
         payload_bytes = payload.encode()
 
-        encrypted_payload_bytes = cls.__encrypt(payload_bytes, receiver_public_key)
+        encrypted_payload_bytes = cls.__encrypt(payload_bytes, public_key)
 
-        return base64.b64encode(encrypted_payload_bytes) # TODO: check
+        return base64.b64encode(encrypted_payload_bytes)
 
     @classmethod
-    def __encrypt(cls, payload_bytes, receiver_public_key : RSAPublicKey):
-        return receiver_public_key.encrypt(payload_bytes, padding.PKCS1v15())
+    def __encrypt(cls, payload_bytes: list, receiver_public_key: RSAPublicKey):
+
+        # see:https://crypto.stackexchange.com/a/50183
+        blockSize = int(receiver_public_key.key_size/8) - 11
+        blocks = math.ceil((len(payload_bytes)/blockSize))
+
+        encrypted = b''
+
+        for i in range(0, blocks):
+            offset = i*blockSize
+            block_length = min(blockSize, len(payload_bytes)-offset)
+            block = payload_bytes[offset:offset+block_length]
+            encrypted = encrypted + receiver_public_key.encrypt(block, padding.PKCS1v15())
+
+        print("ENCRYPT Input bytes: {0}, encrypted bytes {1}".format(len(payload_bytes), len(encrypted)))
+
+        return encrypted
+
+    @classmethod
+    def decrypt(cls, payload, private_key: RSAPrivateKey):
+        payload_bytes = base64.b64decode(payload)
+
+        return cls.__decrypt(payload_bytes, private_key)
+
+    @classmethod
+    def __decrypt(cls, payload_bytes, private_key: RSAPrivateKey):
+
+        blockSize = int(private_key.key_size / 8)
+        blocks = math.ceil((len(payload_bytes) / blockSize))
+
+        decrypted = b''
+
+        for i in range(0, blocks):
+            offset = i * blockSize
+            block_length = min(blockSize, len(payload_bytes) - offset)
+            block = payload_bytes[offset:offset + block_length]
+            decrypted = decrypted + private_key.decrypt(block, padding.PKCS1v15())
+
+        print("DECRYPT Input bytes: {0}, encrypted bytes {1}".format(len(payload_bytes), len(decrypted)))
+
+        return decrypted
 
 
-'''
-public string Encrypt<T>(T payload, AsymmetricKeyParameter receiverPublicKey) {
-            if (receiverPublicKey.IsPrivate) {
-                throw new ArgumentException("Public key of receiver required for encryption", nameof(receiverPublicKey));
-            }
-
-            var payloadBytes = JsonConvert.SerializeObject(payload, JsonSettings).ToBytes();
-            var signedBytes = Encrypt(payloadBytes, receiverPublicKey);
-
-            Logger.LogTrace(LoggingEvents.Cryptography,
-                "Encrypt object (bytes {0} => {1})",
-                payloadBytes.Length, signedBytes.Length);
-
-            return signedBytes.ToBase64();
-        }
-'''
