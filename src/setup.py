@@ -2,7 +2,7 @@ import setuptools
 
 setuptools.setup(
 	name='wom_connector',
-	version='0.1',
+	version='0.2',
 	author='WOM Platform',
 	author_email='info@wom.social',
 	license='MIT',
@@ -14,4 +14,8 @@ setuptools.setup(
 		'Source': 'https://github.com/WOM-Platform/Python-Connector'
 	},
 	packages=setuptools.find_packages(),
+	install_requires=[
+		'requests>=2.22.0',
+		'cryptography>=2.8'
+	]
 )
