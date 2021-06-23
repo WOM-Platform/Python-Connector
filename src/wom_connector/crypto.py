@@ -6,7 +6,6 @@ from cryptography.hazmat.primitives.asymmetric import padding
 from .wom_logger import WOMLogger
 
 class Crypto(object):
-
     __logger = WOMLogger("Crypto")
 
     @classmethod

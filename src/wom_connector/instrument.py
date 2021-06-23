@@ -11,12 +11,11 @@ import base64
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.asymmetric.rsa import RSAPrivateKey
 from cryptography.hazmat.primitives.asymmetric.rsa import RSAPublicKey
-from cryptography.hazmat.primitives.serialization import load_pem_public_key
 from cryptography.hazmat.primitives.serialization import load_pem_private_key
 
 class Instrument:
 
-    def __init__(self, domain: str, instrument_id: int, registry_pubk: bytes, instrument_privk: bytes, instrument_privk_password: str=None):
+    def __init__(self, domain: str, instrument_id: int, instrument_privk: bytes, instrument_privk_password: str=None):
         """
         Create an instance of an WOM Instrument able to generate vouchers.
 
@@ -28,24 +27,15 @@ class Instrument:
         :rtype: Instrument
         :param domain: str: Domain of the Registry (e.g., wom.social).
         :param instrument_id: int: Unique instrument ID, assigned by the WOM platform.
-        :param registry_pubk: bytes: Registry public key in bytes format
-        :param instrument_privk: bytes: Instrument private key in bytes format
-        :param instrument_privk_password: bytes: Optional password for Instrument private key (Default value = None)
+        :param instrument_privk: bytes: Instrument private key in bytes format.
+        :param instrument_privk_password: bytes: Optional password for Instrument private key (Default value = None).
 
         """
 
-        self.__registry_proxy = RegistryProxy(domain, self.__load_public_key(registry_pubk, "Registry Public Key"))
+        self.__registry_proxy = RegistryProxy(domain)
         self.ID = instrument_id
         self.__instrument_privk = self.__load_private_key(instrument_privk, instrument_privk_password, "Instrument Private Key")
         self.__logger = WOMLogger("Instrument")
-
-    @staticmethod
-    def __load_public_key(public_key_str, tag):
-        public_key = load_pem_public_key(public_key_str, default_backend())
-        if not isinstance(public_key, RSAPublicKey):
-            raise TypeError("{0} is not a public RSA key" % tag)
-
-        return public_key
 
     @staticmethod
     def __load_private_key(private_key_str, password, tag):

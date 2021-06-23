@@ -10,7 +10,6 @@ import base64
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.asymmetric.rsa import RSAPrivateKey
 from cryptography.hazmat.primitives.asymmetric.rsa import RSAPublicKey
-from cryptography.hazmat.primitives.serialization import load_pem_public_key
 from cryptography.hazmat.primitives.serialization import load_pem_private_key
 
 class POS:
@@ -25,26 +24,17 @@ class POS:
         :rtype: POS
         :param domain: str: Domain of the Registry (e.g., wom.social).
         :param pos_id: str: Unique instrument ID, assigned by the WOM platform.
-        :param registry_pubk: bytes: Registry public key in bytes format.
         :param pos_privk: bytes: POS private key in bytes format.
         :param pos_privk_password: bytes: Optional password for POS private key (Default value = None)
 
     """
 
-    def __init__(self, domain: str, pos_id: str, registry_pubk: bytes, pos_privk: bytes, pos_privk_password: str=None):
-        self.__registry_proxy = RegistryProxy(domain, self.__load_public_key(registry_pubk, "Registry Public Key"))
+    def __init__(self, domain: str, pos_id: str, pos_privk: bytes, pos_privk_password: str=None):
+        self.__registry_proxy = RegistryProxy(domain)
         self.ID = pos_id
         self.__pos_privk = self.__load_private_key(pos_privk, pos_privk_password,
                                                    "POS Private Key")
         self.__logger = WOMLogger("POS")
-
-    @classmethod
-    def __load_public_key(cls, public_key_str, tag):
-        public_key = load_pem_public_key(public_key_str, default_backend())
-        if not isinstance(public_key, RSAPublicKey):
-            raise TypeError("{0} is not a public RSA key" % tag)
-
-        return public_key
 
     @classmethod
     def __load_private_key(cls, private_key_str, password, tag):
@@ -136,6 +126,5 @@ class POS:
         return json.loads(response.decode('utf-8'))
 
     def __payment_verify(self, otc):
-
         encrypted_otc = Crypto.encrypt(json.dumps({'otc': otc}), public_key=self.__registry_proxy.PublicKey)
         self.__registry_proxy.payment_verify(encrypted_otc.decode('utf-8'))

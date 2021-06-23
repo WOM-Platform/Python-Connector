@@ -3,7 +3,6 @@ if __name__ == "__main__":
     from src.wom_connector.voucher import Voucher
     import datetime
 
-    pubk = open("keys/registry.pub", "rb")
     privk = open("keys/instrument1.pem", "rb")
 
     coords = [(46.9, 12.0),
@@ -35,7 +34,6 @@ if __name__ == "__main__":
 
     connector = Instrument(domain='dev.wom.social',  # this will be 'http://wom.social/api/v1'
                            instrument_id='5e74203f5f21bb265a2d26bd',  # instrument ID
-                           registry_pubk=pubk.read(),
                            instrument_privk=privk.read())
 
     otc, password = connector.request_vouchers(vouchers=vouchers)
