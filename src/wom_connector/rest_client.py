@@ -18,7 +18,7 @@ class RestClient:
             return r.json()
         except requests.exceptions.HTTPError as err:
             cls.__logger.error(err)
-            sys.exit(1)
+            raise
 
     @classmethod
     def __post_command(cls, payload, url):
@@ -28,7 +28,7 @@ class RestClient:
             r.raise_for_status()
         except requests.exceptions.HTTPError as err:
             cls.__logger.error(err)
-            sys.exit(1)
+            raise
 
     def voucher_create(self, payload):
         url = "http://" + self.__domain + "/api/v1/voucher/create"
