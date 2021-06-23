@@ -95,10 +95,10 @@ class Instrument:
         # generate a valid nonce if there is no one
         effective_nonce = self.__generate_nonce(nonce)
 
-        payload = json.dumps({'SourceId': self.ID,
-                              'Nonce': effective_nonce,
-                              'Password': password,
-                              'Vouchers': vouchers}, cls=VoucherEncoder if isinstance(vouchers[0], Voucher) else None)
+        payload = json.dumps({'sourceId': self.ID,
+                              'nonce': effective_nonce,
+                              'password': password,
+                              'vouchers': vouchers}, cls=VoucherEncoder if isinstance(vouchers[0], Voucher) else None)
 
         self.__logger.debug(payload)
 
@@ -118,5 +118,5 @@ class Instrument:
 
     def __voucher_verify(self, otc):
 
-        encrypted_otc = Crypto.encrypt(json.dumps({'Otc': otc}), public_key=self.__registry_proxy.PublicKey)
+        encrypted_otc = Crypto.encrypt(json.dumps({'otc': otc}), public_key=self.__registry_proxy.PublicKey)
         self.__registry_proxy.voucher_verify(encrypted_otc.decode('utf-8'))
