@@ -3,7 +3,6 @@ import sys
 from logging import Logger
 from logging.handlers import TimedRotatingFileHandler
 
-
 class WOMLogger(Logger):
     def __init__(
         self,

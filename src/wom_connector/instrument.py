@@ -14,10 +14,9 @@ from cryptography.hazmat.primitives.asymmetric.rsa import RSAPublicKey
 from cryptography.hazmat.primitives.serialization import load_pem_public_key
 from cryptography.hazmat.primitives.serialization import load_pem_private_key
 
-
 class Instrument:
 
-    def __init__(self, base_url: str, instrument_id: int, registry_pubk: bytes, instrument_privk: bytes, instrument_privk_password: str=None):
+    def __init__(self, domain: str, instrument_id: int, registry_pubk: bytes, instrument_privk: bytes, instrument_privk_password: str=None):
         """
         Create an instance of an WOM Instrument able to generate vouchers.
 
@@ -27,18 +26,17 @@ class Instrument:
             privk.read()
 
         :rtype: Instrument
-        :param base_url: str: Base url of remote Registry API (e.g. http://wom.social/api/v1)
-        :param instrument_id: int:  Unique instrument ID, assigned by the WOM platform.
+        :param domain: str: Domain of the Registry (e.g., wom.social).
+        :param instrument_id: int: Unique instrument ID, assigned by the WOM platform.
         :param registry_pubk: bytes: Registry public key in bytes format
         :param instrument_privk: bytes: Instrument private key in bytes format
         :param instrument_privk_password: bytes: Optional password for Instrument private key (Default value = None)
 
         """
 
-        self.__registry_proxy = RegistryProxy(base_url, self.__load_public_key(registry_pubk, "Registry Public Key"))
+        self.__registry_proxy = RegistryProxy(domain, self.__load_public_key(registry_pubk, "Registry Public Key"))
         self.ID = instrument_id
-        self.__instrument_privk = self.__load_private_key(instrument_privk, instrument_privk_password,
-                                                          "Instrument Private Key")
+        self.__instrument_privk = self.__load_private_key(instrument_privk, instrument_privk_password, "Instrument Private Key")
         self.__logger = WOMLogger("Instrument")
 
     @staticmethod
@@ -74,14 +72,13 @@ class Instrument:
 
         """
 
-
         # call to voucher/create API
         response_data = self.__voucher_create(vouchers, nonce, password)
 
         # call to voucher/verify API
-        self.__voucher_verify(response_data['Otc'])
+        self.__voucher_verify(response_data['otc'])
 
-        return response_data['Otc'], response_data['Password']
+        return response_data['otc'], response_data['password']
 
     def __voucher_create(self, vouchers, nonce=None, password=None):
 

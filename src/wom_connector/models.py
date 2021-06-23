@@ -1,6 +1,5 @@
 import json
 
-
 class VoucherCreatePayloadEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, dict) \

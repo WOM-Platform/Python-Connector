@@ -2,13 +2,12 @@ import requests
 import sys
 from .wom_logger import WOMLogger
 
-
 class RestClient:
     headers = {'Content-type': 'application/json'}
     __logger = WOMLogger("RestClient")
 
-    def __init__(self, base_url):
-        self.__base_url = base_url
+    def __init__(self, domain):
+        self.__domain = domain
 
     @classmethod
     def __post_request(cls, payload, url):
@@ -32,21 +31,21 @@ class RestClient:
             sys.exit(1)
 
     def voucher_create(self, payload):
-        url = self.__base_url + "/voucher/create"
+        url = "http://" + self.__domain + "/api/v1/voucher/create"
 
         return RestClient.__post_request(payload, url)
 
     def voucher_verify(self, payload):
-        url = self.__base_url + "/voucher/verify"
+        url = "http://" + self.__domain + "/api/v1/voucher/verify"
 
         RestClient.__post_command(payload, url)
 
     def payment_register(self, payload):
-        url = self.__base_url + "/payment/register"
+        url = "http://" + self.__domain + "/api/v1/payment/register"
 
         return RestClient.__post_request(payload, url)
 
     def payment_verify(self, payload):
-        url = self.__base_url + "/payment/verify"
+        url = "http://" + self.__domain + "/api/v1/payment/verify"
 
         RestClient.__post_command(payload, url)

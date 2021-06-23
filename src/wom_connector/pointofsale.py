@@ -13,7 +13,6 @@ from cryptography.hazmat.primitives.asymmetric.rsa import RSAPublicKey
 from cryptography.hazmat.primitives.serialization import load_pem_public_key
 from cryptography.hazmat.primitives.serialization import load_pem_private_key
 
-
 class POS:
     """
         Create an instance of a WOM PointOfSale able to generate payment instance.
@@ -24,16 +23,16 @@ class POS:
             privk.read()
 
         :rtype: POS
-        :param base_url: str: Base url of remote Registry API (e.g. http://wom.social/api/v1)
-        :param pos_id: int:  Unique instrument ID, assigned by the WOM platform.
-        :param registry_pubk: bytes: Registry public key in bytes format
-        :param pos_privk: bytes: POS private key in bytes format
+        :param domain: str: Domain of the Registry (e.g., wom.social).
+        :param pos_id: str: Unique instrument ID, assigned by the WOM platform.
+        :param registry_pubk: bytes: Registry public key in bytes format.
+        :param pos_privk: bytes: POS private key in bytes format.
         :param pos_privk_password: bytes: Optional password for POS private key (Default value = None)
 
     """
 
-    def __init__(self, base_url, pos_id, registry_pubk, pos_privk, pos_privk_password=None):
-        self.__registry_proxy = RegistryProxy(base_url, self.__load_public_key(registry_pubk, "Registry Public Key"))
+    def __init__(self, domain: str, pos_id: str, registry_pubk: bytes, pos_privk: bytes, pos_privk_password: str=None):
+        self.__registry_proxy = RegistryProxy(domain, self.__load_public_key(registry_pubk, "Registry Public Key"))
         self.ID = pos_id
         self.__pos_privk = self.__load_private_key(pos_privk, pos_privk_password,
                                                    "POS Private Key")
@@ -86,9 +85,9 @@ class POS:
         response_data = self.__payment_register(amount, pocket_ack_url, filter, pos_ack_url, persistent, nonce, password)
 
         # call to payment/verify API
-        self.__payment_verify(response_data['Otc'])
+        self.__payment_verify(response_data['otc'])
 
-        return response_data['Otc'], response_data['Password']
+        return response_data['otc'], response_data['password']
 
     def __payment_register(self, amount,
                            pocket_ack_url: str,
@@ -111,14 +110,14 @@ class POS:
         # generate a valid nonce if there is no one
         effective_nonce = self.__generate_nonce(nonce)
 
-        payload = json.dumps({'PosId': self.ID,
-                              'Nonce': effective_nonce,
-                              'Password': password,
-                              'Amount': amount,
-                              'SimpleFilter': filter,
-                              'PocketAckUrl': pocket_ack_url,
-                              'PosAckUrl': pos_ack_url,
-                              'Persistent': persistent
+        payload = json.dumps({'posId': self.ID,
+                              'nonce': effective_nonce,
+                              'password': password,
+                              'amount': amount,
+                              'simpleFilter': filter,
+                              'pocketAckUrl': pocket_ack_url,
+                              'posAckUrl': pos_ack_url,
+                              'persistent': persistent
                               }, cls=FilterEncoder if filter is not None else None)
         self.__logger.debug(payload)
 
@@ -138,5 +137,5 @@ class POS:
 
     def __payment_verify(self, otc):
 
-        encrypted_otc = Crypto.encrypt(json.dumps({'Otc': otc}), public_key=self.__registry_proxy.PublicKey)
+        encrypted_otc = Crypto.encrypt(json.dumps({'otc': otc}), public_key=self.__registry_proxy.PublicKey)
         self.__registry_proxy.payment_verify(encrypted_otc.decode('utf-8'))

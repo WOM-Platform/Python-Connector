@@ -5,7 +5,6 @@ from cryptography.hazmat.primitives.asymmetric.rsa import RSAPrivateKey
 from cryptography.hazmat.primitives.asymmetric import padding
 from .wom_logger import WOMLogger
 
-
 class Crypto(object):
 
     __logger = WOMLogger("Crypto")
@@ -20,7 +19,6 @@ class Crypto(object):
 
     @classmethod
     def __encrypt(cls, payload_bytes: list, receiver_public_key: RSAPublicKey):
-
         # see:https://crypto.stackexchange.com/a/50183
         blockSize = int(receiver_public_key.key_size/8) - 11
         blocks = math.ceil((len(payload_bytes)/blockSize))
@@ -46,7 +44,6 @@ class Crypto(object):
 
     @classmethod
     def __decrypt(cls, payload_bytes, private_key: RSAPrivateKey):
-
         blockSize = int(private_key.key_size / 8)
         blocks = math.ceil((len(payload_bytes) / blockSize))
 
@@ -62,5 +59,3 @@ class Crypto(object):
             len(payload_bytes), len(decrypted)))
 
         return decrypted
-
-

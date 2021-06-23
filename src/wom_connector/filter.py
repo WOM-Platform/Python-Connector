@@ -1,7 +1,6 @@
 import json
 from datetime import datetime
 
-
 class Filter:
 
     def to_JSON(self):
@@ -19,7 +18,6 @@ class Filter:
         filter.MaxAge = max_age
 
         return filter
-
 
 class FilterEncoder(json.JSONEncoder):
     def default(self, obj):

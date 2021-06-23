@@ -24,17 +24,17 @@ if __name__ == "__main__":
 
     '''
     # or as list of simple dictionaries
-    vouchers = [{'Aim': 'H', 'Latitude': 46.9, 'Longitude': 12.0, 'Timestamp': '2020-01-28T17:08:24.073280', 'Count': 1},
-                {'Aim': 'H', 'Latitude': 46.9, 'Longitude': 12.0, 'Timestamp': '2020-01-28T17:08:24.073280', 'Count': 1},
-                {'Aim': 'H', 'Latitude': 46.9, 'Longitude': 12.0, 'Timestamp': '2020-01-28T17:08:24.073280', 'Count': 1},
-                {'Aim': 'H', 'Latitude': 46.9, 'Longitude': 12.0, 'Timestamp': '2020-01-28T17:08:24.073280', 'Count': 1},
-                {'Aim': 'H', 'Latitude': 46.9, 'Longitude': 12.0, 'Timestamp': '2020-01-28T17:08:24.073280', 'Count': 1},
-                {'Aim': 'H', 'Latitude': 46.9, 'Longitude': 12.0, 'Timestamp': '2020-01-28T17:08:24.073280', 'Count': 1},
-                {'Aim': 'H', 'Latitude': 46.9, 'Longitude': 12.0, 'Timestamp': '2020-01-28T17:08:24.073280', 'Count': 1}]
+    vouchers = [{'aim': 'H', 'latitude': 46.9, 'longitude': 12.0, 'timestamp': '2020-01-28T17:08:24.073280', 'count': 1},
+                {'aim': 'H', 'latitude': 46.9, 'longitude': 12.0, 'timestamp': '2020-01-28T17:08:24.073280', 'count': 1},
+                {'aim': 'H', 'latitude': 46.9, 'longitude': 12.0, 'timestamp': '2020-01-28T17:08:24.073280', 'count': 1},
+                {'aim': 'H', 'latitude': 46.9, 'longitude': 12.0, 'timestamp': '2020-01-28T17:08:24.073280', 'count': 1},
+                {'aim': 'H', 'latitude': 46.9, 'longitude': 12.0, 'timestamp': '2020-01-28T17:08:24.073280', 'count': 1},
+                {'aim': 'H', 'latitude': 46.9, 'longitude': 12.0, 'timestamp': '2020-01-28T17:08:24.073280', 'count': 1},
+                {'aim': 'H', 'latitude': 46.9, 'longitude': 12.0, 'timestamp': '2020-01-28T17:08:24.073280', 'count': 1}]
     '''
 
-    connector = Instrument(base_url='http://dev.wom.social/api/v1',  # this will be 'http://wom.social/api/v1'
-                           instrument_id=1,  # instrument ID
+    connector = Instrument(domain='dev.wom.social',  # this will be 'http://wom.social/api/v1'
+                           instrument_id='5e74203f5f21bb265a2d26bd',  # instrument ID
                            registry_pubk=pubk.read(),
                            instrument_privk=privk.read())
 

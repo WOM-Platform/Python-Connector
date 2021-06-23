@@ -2,12 +2,11 @@ import json
 from .wom_logger import WOMLogger
 from .rest_client import RestClient
 
-
 class RegistryProxy(object):
 
-    def __init__(self, base_url, public_key):
+    def __init__(self, domain, public_key):
         self.PublicKey = public_key
-        self.client = RestClient(base_url)
+        self.client = RestClient(domain)
         self.__logger = WOMLogger("Registry")
 
     def voucher_create(self, source_id, nonce, payload):

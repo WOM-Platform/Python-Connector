@@ -1,9 +1,7 @@
 import json
 from datetime import datetime
 
-
 class Voucher:
-
     def to_JSON(self):
         return self.__dict__
 
@@ -17,7 +15,6 @@ class Voucher:
         voucher.Count = count
 
         return voucher
-
 
 class VoucherEncoder(json.JSONEncoder):
     def default(self, obj):
