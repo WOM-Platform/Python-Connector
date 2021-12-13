@@ -2,7 +2,7 @@ import setuptools
 
 setuptools.setup(
 	name='wom_connector',
-	version='1.0.1',
+	version='1.1.0',
 	author='WOM Platform',
 	author_email='info@wom.social',
 	license='MIT',

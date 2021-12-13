@@ -3,4 +3,5 @@
 **/.vscode
 **/__pycache__/**
 src/build
-src/
+src/dist
+src/wom_connector.egg-info
