@@ -6,7 +6,7 @@ if __name__ == "__main__":
 
     filter = Filter.create(aim='H', left_top_bound=[46.0, -17.0], right_bottom_bound=[12.0, 160.0], max_age=14)
 
-    pos = POS(domain='dev.wom.social',  # this will be 'http://wom.social/api/v1'
+    pos = POS(domain='dev.wom.social',
               pos_id='5e74205c5f21bb265a2d26d8',  # POS ID
               pos_privk=privk.read())
 

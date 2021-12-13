@@ -16,23 +16,32 @@ if __name__ == "__main__":
               (46.1, 12.8),
               (46.0, 12.9)]
 
-    # vouchers can be specified as a list of Voucher instances
+    # Vouchers can be specified as a list of Voucher instances
+    '''
     vouchers = []
     for c in coords:
         vouchers.append(Voucher.create(aim='H', latitude=c[0], longitude=c[1], timestamp=datetime.datetime.utcnow()))
-
-    '''
-    # or as list of simple dictionaries
-    vouchers = [{'aim': 'H', 'latitude': 46.9, 'longitude': 12.0, 'timestamp': '2020-01-28T17:08:24.073280', 'count': 1},
-                {'aim': 'H', 'latitude': 46.9, 'longitude': 12.0, 'timestamp': '2020-01-28T17:08:24.073280', 'count': 1},
-                {'aim': 'H', 'latitude': 46.9, 'longitude': 12.0, 'timestamp': '2020-01-28T17:08:24.073280', 'count': 1},
-                {'aim': 'H', 'latitude': 46.9, 'longitude': 12.0, 'timestamp': '2020-01-28T17:08:24.073280', 'count': 1},
-                {'aim': 'H', 'latitude': 46.9, 'longitude': 12.0, 'timestamp': '2020-01-28T17:08:24.073280', 'count': 1},
-                {'aim': 'H', 'latitude': 46.9, 'longitude': 12.0, 'timestamp': '2020-01-28T17:08:24.073280', 'count': 1},
-                {'aim': 'H', 'latitude': 46.9, 'longitude': 12.0, 'timestamp': '2020-01-28T17:08:24.073280', 'count': 1}]
     '''
 
-    connector = Instrument(domain='dev.wom.social',  # this will be 'http://wom.social/api/v1'
+    # Or as a list of simple dictionaries
+    '''
+    vouchers = [
+        {'aim': 'H', 'latitude': 46.9, 'longitude': 12.0, 'timestamp': '2020-01-28T17:08:24.073280', 'count': 1},
+        {'aim': 'H', 'latitude': 46.9, 'longitude': 12.0, 'timestamp': '2020-01-28T17:08:24.073280', 'count': 1},
+        {'aim': 'H', 'latitude': 46.9, 'longitude': 12.0, 'timestamp': '2020-01-28T17:08:24.073280', 'count': 1},
+        {'aim': 'H', 'latitude': 46.9, 'longitude': 12.0, 'timestamp': '2020-01-28T17:08:24.073280', 'count': 1},
+        {'aim': 'H', 'latitude': 46.9, 'longitude': 12.0, 'timestamp': '2020-01-28T17:08:24.073280', 'count': 1},
+        {'aim': 'H', 'latitude': 46.9, 'longitude': 12.0, 'timestamp': '2020-01-28T17:08:24.073280', 'count': 1},
+        {'aim': 'H', 'latitude': 46.9, 'longitude': 12.0, 'timestamp': '2020-01-28T17:08:24.073280', 'count': 1}
+    ]
+    '''
+
+    # Or without location, which will be set by the WOM Pocket on redeem
+    vouchers = [
+        Voucher.createWithoutLocation(aim='X', timestamp=datetime.datetime.utcnow())
+    ]
+
+    connector = Instrument(domain='dev.wom.social',
                            instrument_id='5e74203f5f21bb265a2d26bd',  # instrument ID
                            instrument_privk=privk.read())
 

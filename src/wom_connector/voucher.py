@@ -13,6 +13,19 @@ class Voucher:
         voucher.Longitude = longitude
         voucher.Timestamp = timestamp.isoformat()
         voucher.Count = count
+        voucher.CreationMode = 'Standard'
+
+        return voucher
+
+    @staticmethod
+    def createWithoutLocation(aim: str, timestamp: datetime, count: int = 1) -> 'Voucher':
+        voucher = Voucher()
+        voucher.Aim = aim
+        voucher.Latitude = 0.0
+        voucher.Longitude = 0.0
+        voucher.Timestamp = timestamp.isoformat()
+        voucher.Count = count
+        voucher.CreationMode = 'SetLocationOnRedeem'
 
         return voucher
 
